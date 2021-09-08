@@ -4,13 +4,15 @@ import re
 import requests
 from pyquery import PyQuery
 
-from Main import UserInter
+from windows import UserInter
 
 
 class Get:
     def __init__(self):
         self.main_url = UserInter().url
+        print(self.main_url)
         # self.main_url = "https://www.instagram.com/lusizhao_/"
+        # https://www.instagram.com/nini.pic__/
         # 异步请求，动态加载，这里的base_url是统一的
         self.xhr = "https://www.instagram.com/graphql/query/"
         # 请求头
@@ -83,7 +85,7 @@ class Get:
             while self.next_flag:
                 # 控制爬取图片的数量
                 # 由于动态加载页面每次刷新12个item,并且会有图片分组的存在,这里只能使用 大于等于来判断,拿到最接近该值的的资源数量
-                if len(self.all_url) >= 20:
+                if len(self.all_url) >= 100:
                     return
                 xhr_para = {"query_hash": "42d2750e44dbac713ff30130659cd891",
                             "id": self.user_id,

@@ -9,7 +9,7 @@ class UserInter:
         self.root.resizable(width=False, height=False)  # 设置窗口是否可以变化长/宽，False不可变，True可变，默认为True
         name = tk.Label(self.root, text='某博主主页链接:  ', height=3)
         name.pack(side="left")
-        self.url_text = tk.Entry(self.root, width=60, bd=3)
+        self.url_text = tk.Entry(self.root, width=60, bd=5)
         self.url_text.pack(side="left")
         self.url = ""
         tk.Button(self.root, text='确定', width=4, height=1, command=self.get_text).pack(side="left")
