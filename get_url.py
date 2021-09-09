@@ -45,8 +45,12 @@ class Get:
         # 这种类型就是页面上会有个分组，要遍历拿到分组里每个图片的url
         elif typeinfo == "GraphSidecar":
             for children in res_url['node']['edge_sidecar_to_children']['edges']:
-                url = (typeinfo, children['node']['display_url'])
-                self.all_url.append(url)
+                if children['node']['__typename'] == "GraphVideo":
+                    url = (children['node']['__typename'], children['node']['video_url'])
+                    self.all_url.append(url)
+                elif children['node']['__typename'] == "GraphImage":
+                    url = (children['node']['__typename'], children['node']['display_url'])
+                    self.all_url.append(url)
 
     def get_type(self, respose_text, flag):
         if flag:

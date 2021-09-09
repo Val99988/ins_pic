@@ -11,8 +11,10 @@ class MultiThread:
     def main_thread(self):
         # 线程池
         poll = []
+        count = 0
         for url in self.url_pool:
             temp = threading.Thread(target=self.down_thread, args=(url,))
+            count += 1
             poll.append(temp)
         for p in poll:
             p.start()

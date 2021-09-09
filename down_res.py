@@ -21,7 +21,7 @@ class Down:
             shutil.rmtree(res_dir)
         os.mkdir(res_dir)
         for each_url in self.url:
-            if each_url[0] in ["GraphImage", "GraphSidecar"]:
+            if each_url[0] == "GraphImage":
                 file_name = "%s_pic_%d" % (folder, count) + ".jpg"
             elif each_url[0] == "GraphVideo":
                 file_name = "%s_video_%d" % (folder, count) + ".mp4"
