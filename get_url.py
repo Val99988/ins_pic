@@ -28,7 +28,7 @@ class Get:
 
     @staticmethod
     def get_multi_url():
-        # self.main_url = "https://www.instagram.com/lusizhao_/,https://www.instagram.com/nini.pic__/"
+        # self.main_url = "https://www.instagram.com/lusizhao_/,https://www.instagram.com/nini.pic__/,https://www.instagram.com/maudyayunda/"
         # https://www.instagram.com/nini.pic__/
         m_url = UserInter().url.split(",")
         return m_url
