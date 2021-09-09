@@ -9,10 +9,6 @@ from windows import UserInter
 
 class Get:
     def __init__(self):
-        self.main_url = UserInter().url
-        print(self.main_url)
-        # self.main_url = "https://www.instagram.com/lusizhao_/"
-        # https://www.instagram.com/nini.pic__/
         # 异步请求，动态加载，这里的base_url是统一的
         self.xhr = "https://www.instagram.com/graphql/query/"
         # 请求头
@@ -29,6 +25,13 @@ class Get:
         self.next_flag = True
         self.end_cursor = ""
         self.user_id = ""
+
+    @staticmethod
+    def get_multi_url():
+        # self.main_url = "https://www.instagram.com/lusizhao_/,https://www.instagram.com/nini.pic__/"
+        # https://www.instagram.com/nini.pic__/
+        m_url = UserInter().url.split(",")
+        return m_url
 
     def get_url(self, res_url, typeinfo):
         # jpg格式
@@ -74,18 +77,18 @@ class Get:
             for e in edges:
                 self.get_url(e, e['node']['__typename'])
 
-    def judge_ajax(self, flag):
+    def judge_ajax(self, flag, main_url):
         # 由于页面加载的初始页面和动态加载这两种情况下资源链接所在位置不一样，这里要区分一下
         # flag用来标识是普通的http请求还是xhr请求
         if flag:
-            r = requests.get(self.main_url, headers=self.headers, proxies=self.proxies)
+            r = requests.get(main_url, headers=self.headers, proxies=self.proxies)
             self.user_id = re.findall('"profilePage_([0-9]+)"', r.text, re.S)[0]
             self.get_type(r.text, True)
         else:
             while self.next_flag:
                 # 控制爬取图片的数量
                 # 由于动态加载页面每次刷新12个item,并且会有图片分组的存在,这里只能使用 大于等于来判断,拿到最接近该值的的资源数量
-                if len(self.all_url) >= 100:
+                if len(self.all_url) >= 20:
                     return
                 xhr_para = {"query_hash": "42d2750e44dbac713ff30130659cd891",
                             "id": self.user_id,
@@ -94,9 +97,3 @@ class Get:
                             }
                 r = requests.get(self.xhr, headers=self.headers, proxies=self.proxies, params=xhr_para)
                 self.get_type(r.text, False)
-
-
-if __name__ == '__main__':
-    g = Get()
-    g.judge_ajax(True)
-    g.judge_ajax(False)

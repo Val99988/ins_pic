@@ -1,41 +1,30 @@
-import os
-import shutil
+import threading
 
-import requests
-
+from down_res import Down
 from get_url import Get
 
-print("Please be patient until 'all down......' appear")
 
+class MultiThread:
+    def __init__(self):
+        self.url_pool = Get().get_multi_url()
 
-class Down:
-    def __init__(self, url):
-        self.url = url
-        path = os.path.dirname(os.path.dirname(__file__))
-        self.cur_path = os.path.join(path, "ins_pic")
-        self.res_dir = os.path.join(self.cur_path, "Pic & Video")
-        if os.path.exists(self.res_dir):
-            shutil.rmtree(self.res_dir)
-        os.mkdir(self.res_dir)
+    def main_thread(self):
+        # 线程池
+        poll = []
+        for url in self.url_pool:
+            temp = threading.Thread(target=self.down_thread, args=(url,))
+            poll.append(temp)
+        for p in poll:
+            p.start()
 
-    def down_pic(self):
-        count = 0
-        file_name = ""
-        for each_url in self.url:
-            if each_url[0] in ["GraphImage", "GraphSidecar"]:
-                file_name = "pic_%d" % count + ".jpg"
-            elif each_url[0] == "GraphVideo":
-                file_name = "video_%d" % count + ".mp4"
-            down_res = requests.get(each_url[1], stream=True, headers=t.headers, proxies=t.proxies)
-            with open(os.path.join(self.res_dir + "/" + file_name), "wb") as file:
-                file.write(down_res.content)
-            count += 1
-        print("all down......")
+    @staticmethod
+    def down_thread(url):
+        t = Get()
+        t.judge_ajax(True, url)
+        t.judge_ajax(False, url)
+        folder_name = url.split("/")[-1] if url.split("/")[-1] != "" else url.split("/")[-2]
+        Down(t.all_url).down_pic(folder_name)
 
 
 if __name__ == '__main__':
-    t = Get()
-    t.judge_ajax(True)
-    t.judge_ajax(False)
-    d = Down(t.all_url)
-    d.down_pic()
+    MultiThread().main_thread()
