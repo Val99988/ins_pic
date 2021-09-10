@@ -5,8 +5,6 @@ import requests
 
 from get_url import Get
 
-print("Please be patient until 'all down......' appear")
-
 
 class Down:
     def __init__(self, url):
@@ -29,4 +27,3 @@ class Down:
             with open(os.path.join(res_dir + "/" + file_name), "wb") as file:
                 file.write(down_res.content)
             count += 1
-        print("all down......")

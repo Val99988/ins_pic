@@ -34,23 +34,21 @@ class Get:
         return m_url
 
     def get_url(self, res_url, typeinfo):
+        url = ''
         # jpg格式
         if typeinfo == "GraphImage":
             url = (typeinfo, res_url['node']['display_url'])
-            self.all_url.append(url)
         # MP4格式
         elif typeinfo == "GraphVideo":
             url = (typeinfo, res_url['node']['video_url'])
-            self.all_url.append(url)
-        # 这种类型就是页面上会有个分组，要遍历拿到分组里每个图片的url
+        # 这种类型就是页面上会有个分组，要遍历拿到分组里每个图片/视频的url
         elif typeinfo == "GraphSidecar":
             for children in res_url['node']['edge_sidecar_to_children']['edges']:
                 if children['node']['__typename'] == "GraphVideo":
                     url = (children['node']['__typename'], children['node']['video_url'])
-                    self.all_url.append(url)
                 elif children['node']['__typename'] == "GraphImage":
                     url = (children['node']['__typename'], children['node']['display_url'])
-                    self.all_url.append(url)
+        self.all_url.append(url)
 
     def get_type(self, respose_text, flag):
         if flag:
